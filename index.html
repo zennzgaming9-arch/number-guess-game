@@ -14,33 +14,28 @@ body {
     justify-content: center;
     align-items: flex-start;
     padding-top: 50px;
-    position: relative;
     overflow-x: hidden;
 }
 
 .game-container {
-    width: 320px;
-    max-width: 90%;
+    width: 350px;
+    max-width: 95%;
     background: #111;
     padding: 20px;
     border-radius: 15px;
     text-align: center;
-    box-shadow: 0 0 20px rgba(0,0,0,0.6);
-    position: relative;
     border: 1px solid rgba(255,255,255,0.12);
 }
 
 input, button {
     padding: 10px 20px;
-    margin: 10px;
+    margin: 8px;
     font-size: 16px;
     border-radius: 25px;
     border: 1px solid rgba(255,255,255,0.12);
-    cursor: pointer;
-    transition: background 0.3s;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
     background-color: #444;
     color: white;
+    cursor: pointer;
 }
 
 button:hover {
@@ -54,7 +49,6 @@ button:hover {
     margin: 20px auto;
     border-radius: 10px;
     overflow: hidden;
-    position: relative;
     border: 2px solid rgba(255,255,255,0.12);
 }
 
@@ -63,50 +57,53 @@ button:hover {
     width: 0%;
     border-radius: 10px;
     transition: width 0.5s ease, box-shadow 0.5s ease;
-    background-size: 100% 100%;
-    background-repeat: no-repeat;
 }
 
 #heatBar.glow {
     box-shadow: 0 0 10px #FF4500, 0 0 20px #FF6347, 0 0 30px #FF0000;
 }
 
-/* Win counter */
 #winCounter {
-    margin: 5px auto;
-    font-size: 16px;
+    font-size: 18px;
     color: #0f0;
-    width: 60px;
     text-align: center;
+    margin-top: 5px;
 }
 
-/* Closeness text */
 #closenessText {
     font-size: 14px;
     margin-top: 5px;
     font-weight: bold;
 }
 
-/* XP bar container with Level/MAX top labels and XP text below */
+/* XP bar */
 #xpContainer {
-    width: 80%;
-    margin: 10px auto 15px auto;
-    position: relative;
+    width: 90%;
+    margin: 10px auto;
 }
 
 #xpTopLabels {
-    display:flex;
-    justify-content: space-between;
-    margin-bottom:5px;
+    display: flex;
+    justify-content: space-between; /* pins MAX/DEV right */
+    font-size: 14px;
+    font-weight: bold;
+    align-items: center;
 }
 
-#levelText { font-weight: bold; }
-#maxText { font-weight: bold; display:none; }
+#levelText {
+    text-align: left; /* Level number grows naturally */
+}
 
+#maxText {
+    display: none; /* only visible at max or DEV */
+    font-style: italic;
+}
+
+/* XP bar visual */
 #xpBarContainer {
     position: relative;
     height: 20px;
-    background-color: #333;
+    background: #333;
     border-radius: 10px;
     border: 1px solid rgba(255,255,255,0.12);
     overflow: hidden;
@@ -120,87 +117,63 @@ button:hover {
     transition: width 0.5s ease;
 }
 
-/* XP text below bar aligned right */
 #xpText {
-    display:flex;
-    justify-content:flex-end;
-    margin-top:3px;
-    font-size:12px;
-    font-weight:bold;
-    color:white;
+    text-align: right;
+    font-size: 12px;
+    margin-top: 4px;
 }
 
-/* Developer panel */
+/* Developer Panel */
 #devPanel {
-    border: 1px solid rgba(255,255,255,0.12);
-    background-color: #222;
+    max-width: 50vw; /* half screen width */
+    min-width: 250px;
+    padding: 15px;
     border-radius: 10px;
-    padding: 10px 20px 20px 20px;
+    background: #222;
+    border: 1px solid rgba(255,255,255,0.12);
     position: fixed;
-    top: 100px;
-    left: 100px;
-    z-index: 2000;
-    color: white;
-    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    top: 80px;
+    left: 80px;
     display: none;
-    min-width: 220px;
-    max-width: 250px;
-    touch-action: none;
 }
 
-/* iPhone-style drag handle */
 #devDragHandle {
     width: 60px;
     height: 6px;
     background: rgba(255,255,255,0.3);
     border-radius: 3px;
-    margin: 8px auto;
+    margin: 0 auto 10px auto;
     cursor: grab;
 }
+
 #devDragHandle:active {
     cursor: grabbing;
 }
 
-/* Dev Mode Button (bottom-right circle) */
+#devPanel input {
+    width: 75%; /* 3/4 width of dev panel */
+}
+
+/* Dev button */
 #devButton {
     position: fixed;
     bottom: 40px;
     right: 40px;
     width: 60px;
     height: 60px;
+    background: #222;
     border-radius: 50%;
-    border: 1px solid rgba(255,255,255,0.12);
-    background-color: #222;
-    color: white;
-    font-weight: bold;
     font-size: 16px;
-    cursor: pointer;
-    z-index: 2000;
-    display: none;
-    
-    justify-content: center;
-    align-items: center;
-}
-#devButton:hover {
-    background-color: #444;
-}
-
-/* Dev panel inputs */
-#devPanel label, #devPanel input {
-    display: block;
-    margin: 5px 0;
-    width: 100%;
-}
-
-#devPanel input[type="number"] {
-    border-radius: 10px;
-    padding: 5px 10px;
-    background-color: #333;
-    color: white;
     border: 1px solid rgba(255,255,255,0.12);
+    display: none;
+    cursor: pointer;
 }
 
-/* Numpad styling - smaller & circular */
+#devButton:hover {
+    background: #444;
+}
+
+/* Numpad */
 .numpad {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -214,14 +187,8 @@ button:hover {
     height: 50px;
     border-radius: 50%;
     font-size: 18px;
-    background-color: #333;
+    background: #333;
     color: white;
-    border: 1px solid rgba(255,255,255,0.12);
-    cursor: pointer;
-    transition: background 0.2s;
-}
-.numpad button:hover {
-    background-color: #555;
 }
 </style>
 </head>
@@ -229,36 +196,34 @@ button:hover {
 
 <div class="game-container">
 
-<h1>Number Guess Game 🎮</h1>
+<h2>Number Guess Game 🎮</h2>
 <p>Guess a number between 1 and 100</p>
 
-<!-- Wins -->
 <p id="winCounter">Wins: 0 🏆</p>
 
-<!-- XP container -->
 <div id="xpContainer">
-    <div id="xpTopLabels">
-        <span id="levelText">Level 1</span>
-        <span id="maxText">MAX</span>
-    </div>
-    <div id="xpBarContainer">
-        <div id="xpBarFill"></div>
-    </div>
-    <div id="xpText">0 / 75 XP</div>
+  <div id="xpTopLabels">
+    <span id="levelText">Level 1</span>
+    <span id="maxText">MAX</span>
+  </div>
+  <div id="xpBarContainer">
+    <div id="xpBarFill"></div>
+  </div>
+  <div id="xpText">0 / 75 XP</div>
 </div>
 
 <input type="text" id="guessInput" placeholder="Enter your guess">
 <br>
 <button onclick="checkGuess()">Submit</button>
+<button onclick="loadNewSecret()">Load New Secret</button>
 
 <div id="barContainer">
-    <div id="heatBar"></div>
+  <div id="heatBar"></div>
 </div>
 
 <p id="closenessText"></p>
 <div id="message"></div>
 
-<!-- Numpad -->
 <div class="numpad">
     <button onclick="pressNum('1')">1</button>
     <button onclick="pressNum('2')">2</button>
@@ -275,237 +240,94 @@ button:hover {
 
 </div>
 
-<!-- Developer Panel -->
 <div id="devPanel">
-    <div id="devDragHandle"></div>
-    <p id="devInfo">Secret: </p>
-    <label for="customWins">Set Wins:</label>
-    <input type="number" id="customWins" placeholder="Enter new win count">
-    <button onclick="setCustomWins()">Apply Wins</button>
+  <div id="devDragHandle"></div>
+  <p id="devInfo">Secret: </p>
+  <label for="customWins">Set Wins:</label>
+  <input type="number" id="customWins" placeholder="Enter new win count">
+  <button onclick="setCustomWins()">Apply Wins</button>
+  <label for="customLevel">Set Level:</label>
+  <input type="number" id="customLevel" placeholder="Enter level (1–4+)">
+  <button onclick="setCustomLevel()">Apply Level</button>
 </div>
 
-<!-- Dev Mode Button -->
 <button id="devButton" onclick="toggleDevPanel()">Dev</button>
 
 <script>
-// Game vars
-let secret = Math.floor(Math.random() * 100) + 1;
-let winCount = 0;
+let secret=Math.floor(Math.random()*100)+1;
+let winCount=0;
+let xp=0;
+let level=1;
+const levelThresholds=[0,75,150,200];
+let guessHistory={cold:0,warm:0,hot:0,veryHot:0};
 
-// XP and levels
-let xp = 0;
-let level = 1;
-const levelThresholds = [0, 75, 150, 200];
-let guessHistory = {cold:0, warm:0, hot:0, veryHot:0};
-
-// Load saved game
-window.onload = function() {
-    if(localStorage.getItem("winCount")) {
-        winCount = parseInt(localStorage.getItem("winCount"));
-        document.getElementById("winCounter").innerText = "Wins: " + winCount + " 🏆";
-    }
-    if(localStorage.getItem("secret")) secret = parseInt(localStorage.getItem("secret"));
-    if(localStorage.getItem("xp")) xp = parseInt(localStorage.getItem("xp"));
-    if(localStorage.getItem("level")) level = parseInt(localStorage.getItem("level"));
-    if(localStorage.getItem("guessHistory")) guessHistory = JSON.parse(localStorage.getItem("guessHistory"));
-    updateXPBar();
-    updateDevPanel();
-}
-
-// Dragging
-const devButton = document.getElementById("devButton");
-const devPanel = document.getElementById("devPanel");
-const devHandle = document.getElementById("devDragHandle");
-dragElement(devPanel, devHandle);
-
-// Dev toggle
-function toggleDevPanel() {
-    devPanel.style.display = devPanel.style.display === "block" ? "none" : "block";
-}
-
-// Drag function
-function dragElement(elm, handle) {
-    let pos1=0,pos2=0,pos3=0,pos4=0;
-    handle.addEventListener("mousedown", dragMouseDown);
-    handle.addEventListener("touchstart", dragTouchStart);
-
-    function dragMouseDown(e) {
-        e.preventDefault(); pos3 = e.clientX; pos4 = e.clientY;
-        document.addEventListener("mousemove", elementDragMouse);
-        document.addEventListener("mouseup", closeDragElement);
-    }
-    function elementDragMouse(e){
-        e.preventDefault(); pos1=pos3-e.clientX; pos2=pos4-e.clientY;
-        pos3=e.clientX; pos4=e.clientY;
-        elm.style.top = (elm.offsetTop - pos2) + "px";
-        elm.style.left = (elm.offsetLeft - pos1) + "px";
-    }
-    function dragTouchStart(e){
-        e.preventDefault(); pos3 = e.touches[0].clientX; pos4 = e.touches[0].clientY;
-        document.addEventListener("touchmove", elementDragTouch);
-        document.addEventListener("touchend", closeDragElement);
-    }
-    function elementDragTouch(e){
-        e.preventDefault(); pos1=pos3-e.touches[0].clientX; pos2=pos4-e.touches[0].clientY;
-        pos3=e.touches[0].clientX; pos4=e.touches[0].clientY;
-        elm.style.top = (elm.offsetTop - pos2) + "px";
-        elm.style.left = (elm.offsetLeft - pos1) + "px";
-    }
-    function closeDragElement(){
-        document.removeEventListener("mousemove", elementDragMouse);
-        document.removeEventListener("mouseup", closeDragElement);
-        document.removeEventListener("touchmove", elementDragTouch);
-        document.removeEventListener("touchend", closeDragElement);
-    }
-}
-// Dev panel info and auto-save
 function updateDevPanel(){
-    document.getElementById("devInfo").innerText = "Secret Number: " + secret + "\nWins: " + winCount;
+  document.getElementById("devInfo").innerText="Secret: "+secret+"\nWins: "+winCount;
 }
 
 function saveGame(){
-    localStorage.setItem("winCount", winCount);
-    localStorage.setItem("secret", secret);
-    localStorage.setItem("xp", xp);
-    localStorage.setItem("level", level);
-    localStorage.setItem("guessHistory", JSON.stringify(guessHistory));
+  localStorage.setItem("winCount",winCount);
+  localStorage.setItem("secret",secret);
+  localStorage.setItem("xp",xp);
+  localStorage.setItem("level",level);
+  localStorage.setItem("guessHistory",JSON.stringify(guessHistory));
 }
 
-// Set custom wins
-function setCustomWins(){
-    let newWins = parseInt(document.getElementById("customWins").value);
-    if(!isNaN(newWins) && newWins >= 0){
-        winCount = newWins;
-        document.getElementById("winCounter").innerText = "Wins: " + winCount + " 🏆";
-        updateDevPanel();
-        saveGame();
-    }
+window.onload=function(){
+  if(localStorage.getItem("winCount")) winCount=parseInt(localStorage.getItem("winCount"));
+  if(localStorage.getItem("secret")) secret=parseInt(localStorage.getItem("secret"));
+  if(localStorage.getItem("xp")) xp=parseInt(localStorage.getItem("xp"));
+  if(localStorage.getItem("level")) level=parseInt(localStorage.getItem("level"));
+  if(localStorage.getItem("guessHistory")) guessHistory=JSON.parse(localStorage.getItem("guessHistory"));
+
+  document.getElementById("winCounter").innerText="Wins: "+winCount+" 🏆";
+  updateXPBar();
+  updateDevPanel();
 }
 
-// Numpad input
-function pressNum(value){
-    const input = document.getElementById("guessInput");
-    if(value === "Clear") input.value = "";
-    else input.value += value;
+function dragElement(elm,handle){
+  let p1=0,p2=0,p3=0,p4=0;
+  handle.addEventListener("mousedown",mDown);
+  handle.addEventListener("touchstart",tStart);
+  function mDown(e){ e.preventDefault(); p3=e.clientX; p4=e.clientY; document.addEventListener("mousemove",mMove); document.addEventListener("mouseup",cDrag);}
+  function mMove(e){ e.preventDefault(); p1=p3-e.clientX; p2=p4-e.clientY; p3=e.clientX; p4=e.clientY; elm.style.top=(elm.offsetTop-p2)+"px"; elm.style.left=(elm.offsetLeft-p1)+"px";}
+  function tStart(e){ e.preventDefault(); p3=e.touches[0].clientX; p4=e.touches[0].clientY; document.addEventListener("touchmove",tMove); document.addEventListener("touchend",cDrag);}
+  function tMove(e){ e.preventDefault(); p1=p3-e.touches[0].clientX; p2=p4-e.touches[0].clientY; p3=e.touches[0].clientX; p4=e.touches[0].clientY; elm.style.top=(elm.offsetTop-p2)+"px"; elm.style.left=(elm.offsetLeft-p1)+"px";}
+  function cDrag(){ document.removeEventListener("mousemove",mMove); document.removeEventListener("mouseup",cDrag); document.removeEventListener("touchmove",tMove); document.removeEventListener("touchend",cDrag);}
 }
+dragElement(document.getElementById("devPanel"),document.getElementById("devDragHandle"));
 
-// Add XP based on closeness type
-function addXP(type){
-    if(level >= 4) return;
-    if(type==="cold"){ guessHistory.cold++; if(guessHistory.cold<=2) xp+=2; }
-    else if(type==="warm"){ guessHistory.warm++; if(guessHistory.warm<=2) xp+=5; else if(guessHistory.warm===3) xp+=2; }
-    else if(type==="hot"){ guessHistory.hot++; if(guessHistory.hot<=2) xp+=7; else if(guessHistory.hot===3) xp+=5; }
-    else if(type==="veryHot"){ guessHistory.veryHot++; if(guessHistory.veryHot===1) xp+=10; else if(guessHistory.veryHot===2) xp+=5; }
+function toggleDevPanel(){ let d=document.getElementById("devPanel"); d.style.display=d.style.display==="block"?"none":"block";}
+function pressNum(v){ let inp=document.getElementById("guessInput"); if(v==="Clear") inp.value=""; else inp.value+=v;}
+function setCustomWins(){ let n=parseInt(document.getElementById("customWins").value); if(!isNaN(n)&&n>=0){winCount=n; document.getElementById("winCounter").innerText="Wins: "+winCount+" 🏆"; updateDevPanel(); saveGame();}}
+function setCustomLevel(){ let nl=parseInt(document.getElementById("customLevel").value); if(!isNaN(nl)&&nl>0){ level=nl; updateXPBar(); saveGame();}}
 
-    while(level < 4 && xp >= levelThresholds[level]) level++;
-    updateXPBar();
-    saveGame();
-}
+function loadNewSecret(){ secret=Math.floor(Math.random()*100)+1; document.getElementById("message").innerText="New secret loaded! Guess between 1 and 100"; document.getElementById("guessInput").value=""; document.getElementById("closenessText").innerText=""; let hb=document.getElementById("heatBar"); hb.style.width="0%"; hb.classList.remove("glow"); guessHistory={cold:0,warm:0,hot:0,veryHot:0}; saveGame(); updateDevPanel();}
 
-// Update XP bar and MAX
+function addXP(type){ if(level>=4) return; if(type==="cold"){guessHistory.cold++; if(guessHistory.cold<=2) xp+=2;} else if(type==="warm"){guessHistory.warm++; if(guessHistory.warm<=2) xp+=5; else if(guessHistory.warm===3) xp+=2;} else if(type==="hot"){guessHistory.hot++; if(guessHistory.hot<=2) xp+=7; else if(guessHistory.hot===3) xp+=5;} else if(type==="veryHot"){guessHistory.veryHot++; if(guessHistory.veryHot===1) xp+=10; else if(guessHistory.veryHot===2) xp+=5;} while(level<4 && xp>=levelThresholds[level]) level++; updateXPBar(); saveGame();}
+
 function updateXPBar(){
-    let nextLevelXP = levelThresholds[level] || levelThresholds[3];
-    let barFill = Math.min((xp / nextLevelXP)*100, 100);
-    const xpBar = document.getElementById("xpBarFill");
-    xpBar.style.width = barFill + "%";
+    let nx = levelThresholds[level] || levelThresholds[3];
+    let pct = Math.min((xp / nx) * 100, 100);
+    document.getElementById("xpBarFill").style.width = pct + "%";
+    document.getElementById("xpText").innerText = xp + " / " + nx + " XP";
 
-    document.getElementById("xpText").innerText = xp + " / " + nextLevelXP + " XP";
+    // Level text
+    document.getElementById("levelText").innerText = "Level " + level;
 
-    if(level >=4){
-        document.getElementById("maxText").style.display="block";
-        document.getElementById("xpText").innerText = "200 / 200 XP";
-    } else{
-        document.getElementById("maxText").style.display="none";
+    // Show MAX or DEV in italic at top-right
+    if(level > 4){
+        document.getElementById("maxText").innerText = "DEV";
+        document.getElementById("maxText").style.display = "block";
+    } else if(level >= 4){
+        document.getElementById("maxText").innerText = "MAX";
+        document.getElementById("maxText").style.display = "block";
+    } else {
+        document.getElementById("maxText").style.display = "none";
     }
-}// Main game function
-function checkGuess(){
-    let input = document.getElementById("guessInput").value;
-    let message = document.getElementById("message");
-    let heatBar = document.getElementById("heatBar");
-    let winCounter = document.getElementById("winCounter");
-    let closenessText = document.getElementById("closenessText");
-
-    if(input === "411"){
-        devButton.style.display="flex";
-        message.innerHTML="👨‍💻 Developer Mode Enabled!";
-        return;
-    }
-
-    if(isNaN(input) && input.trim()!==""){
-        message.innerHTML="No Letters Here Buddy 🚫";
-        closenessText.innerText="";
-        heatBar.classList.remove("glow");
-        return;
-    }
-
-    if(isNaN(input) || input.trim()===""){
-        message.innerHTML="Guess a number between 1 and 100";
-        closenessText.innerText="";
-        heatBar.classList.remove("glow");
-        return;
-    }
-
-    let guess = parseInt(input);
-    if(guess>100){ message.innerHTML="It's Not Over 100 You Silly!"; closenessText.innerText=""; heatBar.classList.remove("glow"); return; }
-
-    let distance = Math.abs(guess-secret);
-    let closeness = 100-distance;
-    if(closeness<0) closeness=0;
-
-    heatBar.style.width = closeness + "%";
-    heatBar.classList.remove("glow");
-
-    // Determine closeness type and XP
-    if(distance===0){ closenessText.innerText=""; heatBar.style.background="linear-gradient(to right,#8B0000,#660000)"; addXP("veryHot"); }
-    else if(distance<=5){ closenessText.innerText="Very Hot 🔥"; closenessText.style.color="red"; heatBar.style.background="linear-gradient(to right,#8B0000,#660000)"; heatBar.classList.add("glow"); addXP("veryHot"); }
-    else if(distance<=15){ closenessText.innerText="Hot 🔥"; closenessText.style.color="darkorange"; heatBar.style.background="linear-gradient(to right,#FF8C00,#B22222)"; addXP("hot"); }
-    else if(distance<=30){ closenessText.innerText="Warm 🌤️"; closenessText.style.color="orange"; heatBar.style.background="linear-gradient(to right,#FFD700,#FF8C00)"; addXP("warm"); }
-    else{ closenessText.innerText="Cold ❄️"; closenessText.style.color="deepskyblue"; heatBar.style.background="linear-gradient(to right,#00FFFF,#FFFF00)"; addXP("cold"); }
-
-    // Correct guess
-    if(guess === secret){
-        winCount++;
-        winCounter.innerText = "Wins: " + winCount + " 🏆";
-        heatBar.style.width = "100%";
-        heatBar.style.background = "linear-gradient(to right,#8B0000,#660000)";
-        heatBar.classList.remove("glow");
-        closenessText.innerText = "";
-        message.innerHTML = `
-            Congratulations You've Won! 🎉<br><br>
-            Wanna Play Again? 😆<br>
-            <button onclick="restartGame()">Yes</button>
-            <button onclick="endGame()">No</button>
-        `;
-        updateDevPanel();
-        saveGame();
-        return;
-    }
-
-    // Wrong guess
-    if(guess !== secret){
-        message.innerHTML = "Wrong, Try Again!";
-    }
-
-    // Clear input
-    document.getElementById("guessInput").value = "";
-    saveGame();
 }
 
-// Restart and end
-function restartGame(){
-    secret = Math.floor(Math.random() * 100) + 1;
-    document.getElementById("message").innerHTML = "New game started! Guess a number between 1 and 100";
-    document.getElementById("guessInput").value = "";
-    document.getElementById("heatBar").style.width = "0%";
-    document.getElementById("heatBar").style.background = "linear-gradient(to right,#00FFFF,#FFFF00)";
-    closenessText.innerText = "";
-    guessHistory = {cold:0, warm:0, hot:0, veryHot:0};
-    saveGame();
-}
-
-function endGame(){
-    document.getElementById("message").innerHTML = "Thanks for playing! 👋";
-}
+function checkGuess(){ let inp=document.getElementById("guessInput").value; let msg=document.getElementById("message"); let ht=document.getElementById("heatBar"); let wc=document.getElementById("winCounter"); let ct=document.getElementById("closenessText"); if(inp==="411"){document.getElementById("devButton").style.display="block"; msg.innerText="Dev enabled!"; return;} if(isNaN(inp)|| inp.trim()===""){msg.innerText="Guess a number!"; return;} let g=parseInt(inp); if(g>100){msg.innerText="It’s not over 100!"; return;} let d=Math.abs(g-secret); ht.style.width=(100-d)+"%"; ht.classList.remove("glow"); if(d===0){addXP("veryHot"); ht.style.background="linear-gradient(to right,#8B0000,#660000)"; wc.innerText="Wins: "+(++winCount)+" 🏆"; msg.innerText="Correct!"; saveGame();} else if(d<=5){addXP("veryHot"); ct.innerText="Very Hot!"; ht.style.background="linear-gradient(to right,#8B0000,#660000)"; ht.classList.add("glow");} else if(d<=15){addXP("hot"); ct.innerText="Hot"; ht.style.background="linear-gradient(to right,#FF8C00,#B22222)";} else if(d<=30){addXP("warm"); ct.innerText="Warm"; ht.style.background="linear-gradient(to right,#FFD700,#FF8C00)";} else {addXP("cold"); ct.innerText="Cold"; ht.style.background="linear-gradient(to right,#00FFFF,#FFFF00)";} document.getElementById("guessInput").value=""; saveGame();}
 </script>
 </body>
 </html>
