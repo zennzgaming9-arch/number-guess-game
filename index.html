@@ -12,26 +12,30 @@ body {
     min-height: 100vh;
     display: flex;
     justify-content: center;
-    align-items: flex-start; /* prevents sideways stretching */
-    padding-top: 50px; /* space from top */
+    align-items: flex-start;
+    padding-top: 50px;
+    position: relative;
+    overflow-x: hidden;
 }
 
 .game-container {
     width: 320px;
-    max-width: 90%; /* responsive for small screens */
+    max-width: 90%;
     background: #111;
     padding: 20px;
     border-radius: 15px;
     text-align: center;
     box-shadow: 0 0 20px rgba(0,0,0,0.6);
+    position: relative;
+    border: 1px solid rgba(255,255,255,0.12);
 }
 
 input, button {
     padding: 10px 20px;
     margin: 10px;
     font-size: 16px;
-    border-radius: 25px;          /* calm round buttons */
-    border: none;
+    border-radius: 25px;
+    border: 1px solid rgba(255,255,255,0.12);
     cursor: pointer;
     transition: background 0.3s;
     box-shadow: 0 4px 6px rgba(0,0,0,0.3);
@@ -50,14 +54,64 @@ button:hover {
     margin: 20px auto;
     border-radius: 10px;
     overflow: hidden;
+    position: relative;
+    border: 2px solid rgba(255,255,255,0.12);
 }
 
 #heatBar {
     height: 100%;
     width: 0%;
-    background: linear-gradient(to right, red, yellow, lime);
     border-radius: 10px;
-    transition: width 0.5s ease, background 0.5s ease;
+    transition: width 0.5s ease, box-shadow 0.5s ease;
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+}
+
+#heatBar.glow {
+    box-shadow: 0 0 10px #FF4500, 0 0 20px #FF6347, 0 0 30px #FF0000;
+}
+
+#winCounter {
+    margin: 10px 0;
+    font-size: 18px;
+    color: #0f0;
+}
+
+#closenessText {
+    font-size: 14px;
+    margin-top: 5px;
+    font-weight: bold;
+}
+
+/* Developer panel */
+#devPanel {
+    border: 1px solid rgba(255,255,255,0.12);
+    background-color: #222;
+    border-radius: 10px;
+    padding: 10px;
+    position: fixed;
+    top: 100px;
+    left: 100px;
+    cursor: move;
+    z-index: 2000; /* Always on top */
+    color: white;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    display: none;
+    will-change: top, left;
+    touch-action: none; /* prevent mobile scrolling interference */
+}
+#devButton {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 8px 12px;
+    font-size: 14px;
+    border-radius: 15px;
+    border: 1px solid rgba(255,255,255,0.12);
+    cursor: move;
+    z-index: 2000; /* Always on top */
+    display: none; /* initially hidden */
+    touch-action: none;
 }
 </style>
 </head>
@@ -68,6 +122,8 @@ button:hover {
 <h1>Number Guess Game 🎮</h1>
 <p>Guess a number between 1 and 100</p>
 
+<p id="winCounter">Wins: 0 🏆</p>
+
 <input type="text" id="guessInput" placeholder="Enter your guess">
 <br>
 <button onclick="checkGuess()">Submit</button>
@@ -76,25 +132,128 @@ button:hover {
     <div id="heatBar"></div>
 </div>
 
+<p id="closenessText"></p>
 <div id="message"></div>
 
 </div> <!-- closes game-container -->
 
+<!-- Developer Panel -->
+<div id="devPanel">
+    <button onclick="toggleDevPanel()">X</button>
+    <p id="devInfo">Secret: </p>
+</div>
+<button id="devButton" onclick="toggleDevPanel()">Dev Mode</button>
+
 <script>
 let secret = Math.floor(Math.random() * 100) + 1;
+let winCount = 0;
+const DEV_CODE = "411"; // secret code to unlock dev mode
 
+const devButton = document.getElementById("devButton");
+const devPanel = document.getElementById("devPanel");
+
+// Enable draggable for panel/button (mobile & desktop)
+dragElement(devPanel);
+dragElement(devButton);
+
+// Double-tap / double-click hides panel
+let lastTap = 0;
+devPanel.addEventListener("touchend", function() {
+    const currentTime = new Date().getTime();
+    const tapLength = currentTime - lastTap;
+    if (tapLength < 300 && tapLength > 0) {
+        devPanel.style.display = "none";
+    }
+    lastTap = currentTime;
+});
+devPanel.addEventListener("dblclick", function() {
+    devPanel.style.display = "none";
+});
+
+// Toggle panel via X or button
+function toggleDevPanel() {
+    devPanel.style.display = devPanel.style.display === "block" ? "none" : "block";
+}
+
+// Drag function (only draggable when touch/mouse starts on the element)
+function dragElement(elm) {
+    let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+
+    elm.addEventListener("mousedown", dragMouseDown);
+    elm.addEventListener("touchstart", dragTouchStart);
+
+    function dragMouseDown(e) {
+        e.preventDefault();
+        pos3 = e.clientX;
+        pos4 = e.clientY;
+        document.addEventListener("mousemove", elementDragMouse);
+        document.addEventListener("mouseup", closeDragElement);
+    }
+    function elementDragMouse(e) {
+        e.preventDefault();
+        pos1 = pos3 - e.clientX;
+        pos2 = pos4 - e.clientY;
+        pos3 = e.clientX;
+        pos4 = e.clientY;
+        elm.style.top = (elm.offsetTop - pos2) + "px";
+        elm.style.left = (elm.offsetLeft - pos1) + "px";
+    }
+    function dragTouchStart(e) {
+        e.preventDefault();
+        pos3 = e.touches[0].clientX;
+        pos4 = e.touches[0].clientY;
+        document.addEventListener("touchmove", elementDragTouch);
+        document.addEventListener("touchend", closeDragElement);
+    }
+    function elementDragTouch(e) {
+        e.preventDefault();
+        pos1 = pos3 - e.touches[0].clientX;
+        pos2 = pos4 - e.touches[0].clientY;
+        pos3 = e.touches[0].clientX;
+        pos4 = e.touches[0].clientY;
+        elm.style.top = (elm.offsetTop - pos2) + "px";
+        elm.style.left = (elm.offsetLeft - pos1) + "px";
+    }
+    function closeDragElement() {
+        document.removeEventListener("mousemove", elementDragMouse);
+        document.removeEventListener("mouseup", closeDragElement);
+        document.removeEventListener("touchmove", elementDragTouch);
+        document.removeEventListener("touchend", closeDragElement);
+    }
+}
+
+// Update dev panel info
+function updateDevPanel() {
+    document.getElementById("devInfo").innerText = "Secret Number: " + secret + "\nWins: " + winCount;
+}
+
+// Main game
 function checkGuess() {
     let input = document.getElementById("guessInput").value;
     let message = document.getElementById("message");
     let heatBar = document.getElementById("heatBar");
+    let winCounter = document.getElementById("winCounter");
+    let closenessText = document.getElementById("closenessText");
 
-    if (input === "411") {
-        message.innerHTML = "👨‍💻 Developer Mode Activated<br>Secret number is: " + secret;
+    // Unlock dev mode
+    if (input === DEV_CODE) {
+        devButton.style.display = "block";
+        message.innerHTML = "👨‍💻 Developer Mode Enabled!";
+        return;
+    }
+
+    // Letters -> show message
+    if (isNaN(input) && input.trim() !== "") {
+        message.innerHTML = "No Letters Here Buddy 🚫";
+        closenessText.innerText = "";
+        heatBar.classList.remove("glow");
         return;
     }
 
     if (isNaN(input) || input.trim() === "") {
-        message.innerHTML = "🚀<br>Guess a number between 1 and 100";
+        message.innerHTML = "Guess a number between 1 and 100";
+        closenessText.innerText = "";
+        heatBar.classList.remove("glow");
         return;
     }
 
@@ -102,18 +261,8 @@ function checkGuess() {
 
     if (guess > 100) {
         message.innerHTML = "It's Not Over 100 You Silly!";
-        return;
-    }
-
-    if (guess === secret) {
-        heatBar.style.width = "100%";
-        heatBar.style.background = "lime";
-        message.innerHTML = `
-            Congratulations You've Won! 🎉<br><br>
-            Wanna Play Again? 😆<br>
-            <button onclick="restartGame()">Yes</button>
-            <button onclick="endGame()">No</button>
-        `;
+        closenessText.innerText = "";
+        heatBar.classList.remove("glow");
         return;
     }
 
@@ -122,16 +271,49 @@ function checkGuess() {
     if (closeness < 0) closeness = 0;
 
     heatBar.style.width = closeness + "%";
+    heatBar.classList.remove("glow");
 
-    if (distance <= 5) {
-        heatBar.style.background = "linear-gradient(to right, lime, yellow, lime)";
+    if (distance === 0) {
+        closenessText.innerText = "";
+        heatBar.style.background = "linear-gradient(to right, #8B0000, #660000)";
+    } else if (distance <= 5) {
+        closenessText.innerText = "Very Hot 🔥";
+        closenessText.style.color = "red";
+        heatBar.style.background = "linear-gradient(to right, #8B0000, #660000)";
+        heatBar.classList.add("glow");
     } else if (distance <= 15) {
-        heatBar.style.background = "linear-gradient(to right, yellow, orange, yellow)";
+        closenessText.innerText = "Hot 🔥";
+        closenessText.style.color = "darkorange";
+        heatBar.style.background = "linear-gradient(to right, #FF8C00, #B22222)";
+    } else if (distance <= 30) {
+        closenessText.innerText = "Warm 🌤️";
+        closenessText.style.color = "orange";
+        heatBar.style.background = "linear-gradient(to right, #FFD700, #FF8C00)";
     } else {
-        heatBar.style.background = "linear-gradient(to right, red, darkred, red)";
+        closenessText.innerText = "Cold ❄️";
+        closenessText.style.color = "deepskyblue";
+        heatBar.style.background = "linear-gradient(to right, #00FFFF, #FFFF00)";
+    }
+
+    if (guess === secret) {
+        winCount++;
+        winCounter.innerText = "Wins: " + winCount + " 🏆";
+        heatBar.style.width = "100%";
+        heatBar.style.background = "linear-gradient(to right, #8B0000, #660000)";
+        heatBar.classList.remove("glow");
+        closenessText.innerText = "";
+        message.innerHTML = `
+            Congratulations You've Won! 🎉<br><br>
+            Wanna Play Again? 😆<br>
+            <button onclick="restartGame()">Yes</button>
+            <button onclick="endGame()">No</button>
+        `;
+        updateDevPanel();
+        return;
     }
 
     message.innerHTML = "Wrong, Try Again!";
+    updateDevPanel();
 }
 
 function restartGame() {
@@ -139,11 +321,16 @@ function restartGame() {
     document.getElementById("message").innerHTML = "New game started! Guess a number between 1 and 100";
     document.getElementById("guessInput").value = "";
     document.getElementById("heatBar").style.width = "0%";
-    document.getElementById("heatBar").style.background = "linear-gradient(to right, red, yellow, lime)";
+    document.getElementById("heatBar").style.background = "linear-gradient(to right, #00FFFF, #FFFF00)";
+    document.getElementById("heatBar").classList.remove("glow");
+    document.getElementById("closenessText").innerText = "";
+    updateDevPanel();
 }
 
 function endGame() {
     document.getElementById("message").innerHTML = "Thanks for playing! 👋";
+    document.getElementById("closenessText").innerText = "";
+    document.getElementById("heatBar").classList.remove("glow");
 }
 </script>
 
