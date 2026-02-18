@@ -9,10 +9,21 @@ body {
     color: white;
     font-family: Arial;
     margin: 0;
+    min-height: 100vh;
     display: flex;
     justify-content: center;
-    align-items: center;
-    height: 100vh;
+    align-items: flex-start; /* prevents sideways stretching */
+    padding-top: 50px; /* space from top */
+}
+
+.game-container {
+    width: 320px;
+    max-width: 90%; /* responsive for small screens */
+    background: #111;
+    padding: 20px;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 0 20px rgba(0,0,0,0.6);
 }
 
 input, button {
@@ -39,6 +50,8 @@ input, button {
 </head>
 <body>
 
+<div class="game-container">
+
 <h1>Number Guess Game 🎮</h1>
 <p>Guess a number between 1 and 100</p>
 
@@ -51,6 +64,8 @@ input, button {
 </div>
 
 <div id="message"></div>
+
+</div> <!-- closes game-container -->
 
 <script>
 let secret = Math.floor(Math.random() * 100) + 1;
