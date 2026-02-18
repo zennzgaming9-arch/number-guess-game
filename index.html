@@ -27,24 +27,37 @@ body {
 }
 
 input, button {
-    padding: 10px;
+    padding: 10px 20px;
     margin: 10px;
     font-size: 16px;
+    border-radius: 25px;          /* calm round buttons */
+    border: none;
+    cursor: pointer;
+    transition: background 0.3s;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+    background-color: #444;
+    color: white;
+}
+
+button:hover {
+    background-color: #666;
 }
 
 #barContainer {
     width: 80%;
     height: 20px;
-    background: #333;
+    background: linear-gradient(to right, #555, #222);
     margin: 20px auto;
     border-radius: 10px;
+    overflow: hidden;
 }
 
 #heatBar {
     height: 100%;
     width: 0%;
-    background: red;
+    background: linear-gradient(to right, red, yellow, lime);
     border-radius: 10px;
+    transition: width 0.5s ease, background 0.5s ease;
 }
 </style>
 </head>
@@ -111,11 +124,11 @@ function checkGuess() {
     heatBar.style.width = closeness + "%";
 
     if (distance <= 5) {
-        heatBar.style.background = "lime";
+        heatBar.style.background = "linear-gradient(to right, lime, yellow, lime)";
     } else if (distance <= 15) {
-        heatBar.style.background = "yellow";
+        heatBar.style.background = "linear-gradient(to right, yellow, orange, yellow)";
     } else {
-        heatBar.style.background = "red";
+        heatBar.style.background = "linear-gradient(to right, red, darkred, red)";
     }
 
     message.innerHTML = "Wrong, Try Again!";
@@ -126,7 +139,7 @@ function restartGame() {
     document.getElementById("message").innerHTML = "New game started! Guess a number between 1 and 100";
     document.getElementById("guessInput").value = "";
     document.getElementById("heatBar").style.width = "0%";
-    document.getElementById("heatBar").style.background = "red";
+    document.getElementById("heatBar").style.background = "linear-gradient(to right, red, yellow, lime)";
 }
 
 function endGame() {
