@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Number Guess Game</title>
+<style>
+body {
+    background-color: black;
+    color: white;
+    text-align: center;
+    font-family: Arial;
+}
+
+input, button {
+    padding: 10px;
+    margin: 10px;
+    font-size: 16px;
+}
+
+#barContainer {
+    width: 80%;
+    height: 20px;
+    background: #333;
+    margin: 20px auto;
+    border-radius: 10px;
+}
+
+#heatBar {
+    height: 100%;
+    width: 0%;
+    background: red;
+    border-radius: 10px;
+}
+</style>
+</head>
+<body>
+
+<h1>Number Guess Game 🎮</h1>
+<p>Guess a number between 1 and 100</p>
+
+<input type="text" id="guessInput" placeholder="Enter your guess">
+<br>
+<button onclick="checkGuess()">Submit</button>
+
+<div id="barContainer">
+    <div id="heatBar"></div>
+</div>
+
+<div id="message"></div>
+
+<script>
+let secret = Math.floor(Math.random() * 100) + 1;
+
+function checkGuess() {
+    let input = document.getElementById("guessInput").value;
+    let message = document.getElementById("message");
+    let heatBar = document.getElementById("heatBar");
+
+    if (input === "411") {
+        message.innerHTML = "👨‍💻 Developer Mode Activated<br>Secret number is: " + secret;
+        return;
+    }
+
+    if (isNaN(input) || input.trim() === "") {
+        message.innerHTML = "🚀<br>Guess a number between 1 and 100";
+        return;
+    }
+
+    let guess = parseInt(input);
+
+    if (guess > 100) {
+        message.innerHTML = "It's Not Over 100 You Silly!";
+        return;
+    }
+
+    if (guess === secret) {
+        heatBar.style.width = "100%";
+        heatBar.style.background = "lime";
+        message.innerHTML = `
+            Congratulations You've Won! 🎉<br><br>
+            Wanna Play Again? 😆<br>
+            <button onclick="restartGame()">Yes</button>
+            <button onclick="endGame()">No</button>
+        `;
+        return;
+    }
+
+    let distance = Math.abs(guess - secret);
+    let closeness = 100 - distance;
+    if (closeness < 0) closeness = 0;
+
+    heatBar.style.width = closeness + "%";
+
+    if (distance <= 5) {
+        heatBar.style.background = "lime";
+    } else if (distance <= 15) {
+        heatBar.style.background = "yellow";
+    } else {
+        heatBar.style.background = "red";
+    }
+
+    message.innerHTML = "Wrong, Try Again!";
+}
+
+function restartGame() {
+    secret = Math.floor(Math.random() * 100) + 1;
+    document.getElementById("message").innerHTML = "New game started! Guess a number between 1 and 100";
+    document.getElementById("guessInput").value = "";
+    document.getElementById("heatBar").style.width = "0%";
+    document.getElementById("heatBar").style.background = "red";
+}
+
+function endGame() {
+    document.getElementById("message").innerHTML = "Thanks for playing! 👋";
+}
+</script>
+
+</body>
+</html>
